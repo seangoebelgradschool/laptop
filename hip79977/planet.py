@@ -21,7 +21,7 @@ def main(save=False):
     plt.arrow(center[0] + 0.5/9.5e-3*np.cos(np.deg2rad(24.6)),
               center[1] + 0.5/9.5e-3*np.sin(np.deg2rad(24.6))-60-10,
               0, 60, head_width=10, head_length=10, linewidth=2, fc='w', ec='w')
-    scalebar([880, 1060], distance=62, pixelscale=9.5e-3, linewidth=1.5, fontsize=16)
+    scalebar([880, 1060], distance=66, pixelscale=9.5e-3, linewidth=1.5, fontsize=16)
     compass([920, 930], angle=0, ax=None, length=20, textscale=1.5, fontsize=16, \
             color='white', labeleast=True, linewidth=1.5)
     
@@ -56,7 +56,7 @@ def main(save=False):
     plt.arrow(center[0] + 0.5/pixscal*np.cos(np.deg2rad(24.6)),
               center[1] + 0.5/pixscal*np.sin(np.deg2rad(24.6))-20-5,
               0, 20, head_width=5, head_length=5, linewidth=1, fc='w', ec='w')
-    scalebar([60, 119], distance=62, pixelscale=pixscal, linewidth=1.5, fontsize=14)
+    scalebar([60, 119], distance=66, pixelscale=pixscal, linewidth=1.5, fontsize=14)
     #plt.text(plt.xlim()[0]+2.5, plt.ylim()[1]-2.5,
     #         '(c)', color='black', bbox=dict(facecolor='white'),
     #         ha='left', va='top', size=14)

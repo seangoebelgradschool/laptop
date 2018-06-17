@@ -80,6 +80,8 @@ def main(save=False):
             
     #Actually apply radial scaling
     #img *= scaling
+    
+    pixscal=4.5556e-6 * 60*60 #arcsec/pixel
            
     plt.imshow(img, interpolation='none', vmin=mymin, vmax=mymax)#, norm=LogNorm())
     plt.title(title, fontsize=21)
@@ -92,7 +94,7 @@ def main(save=False):
     ax.set_xticklabels([])
     compass([80,120], angle=tot_rot, ax=None, length=8, textscale=1.6, fontsize=21, \
             color='white', labeleast=True, linewidth=3) #add compass to image
-
+    scalebar([95, 133], distance=66, pixelscale=pixscal, linewidth=3, fontsize=21)
 
     #plot center marker
     plt.plot(center[0], center[1], 'k+', markersize=25, markeredgewidth=3)
@@ -168,3 +170,21 @@ def compass(origin, angle=0.0, ax=None, length=5, textscale=1.4, fontsize=12, \
                  verticalalignment='center', horizontalalignment='center', \
                  color=color, fontsize=fontsize) 
 
+def scalebar(origin, distance=None, pixelscale=0., linewidth=3, fontsize=16, **kwargs):
+    dx = 0.5/pixelscale
+
+    ax = plt.gca()
+    auto = ax.get_autoscale_on()
+    ax.set_autoscale_on(False)
+
+    plt.plot([origin[0], origin[0]+dx], [origin[1], origin[1]], color='white', \
+             linewidth=linewidth, clip_on=False, **kwargs)
+    plt.text(origin[0]+dx/2, origin[1]+3, '0.5"', horizontalalignment='center', \
+             color='white', fontsize=fontsize)
+
+    # reset the autoscale parameter? 
+
+    if distance is not None:
+        plt.text(origin[0]+dx/2, origin[1]-3, '{0:d} AU'.format(distance), \
+                 horizontalalignment='center', color='white', \
+                 verticalalignment='top', fontsize=fontsize)

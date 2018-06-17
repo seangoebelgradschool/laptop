@@ -4,6 +4,7 @@ import pyfits
 import pdb
 from matplotlib.colors import LogNorm
 from PIL import Image, ImageDraw, ImageFont
+import scipy.ndimage.interpolation
 
 #indexed from 1
 #J : slices 1-5 1.241 um 1.973 px fwhm
@@ -104,9 +105,7 @@ def pic(band='none', save='show', image='data', save_band=False, disk='blah', pa
         img *= scaling
 
     elif image=='snr':
-        
-#MASK SNR IMAGES ACCORDING TO NANS IN DATA IMAGES
-        
+                
         print "SNR File"
         if band.lower()=='full': #collapsed version
             print "Full image"
@@ -123,7 +122,7 @@ def pic(band='none', save='show', image='data', save_band=False, disk='blah', pa
             mymax=6
             title=r'$J$'+" band, SNR Map"
             outtitle = folderstub + 'hip79977_j_snr.png'
-            r_in=6
+            r_in=7
         elif band.lower()=='h': #H band
             print "H band"
             file=filestub + '_h_snr.fits'
@@ -145,21 +144,28 @@ def pic(band='none', save='show', image='data', save_band=False, disk='blah', pa
         img[scaling < r_in**2] = np.nan
         
     if disk=='pretty':
-        tot_rot = -125.22 #degrees
+        #tot_rot = -125.22 #degrees
 
         #rotate image by 90 degrees so N is up
-        img = np.rot90(img, k=3)
-        tot_rot += 90
+        #img = np.rot90(img, k=3)
+        #tot_rot += 90
         crop = [31, 169]
-        annotate = np.array([80, 140])
+        annotate = np.array([78, 135])
     else:
-        tot_rot = 0
+        #tot_rot = 0
         crop = [53, 147]
         annotate = np.array([80, 125])
-    
-    #figs/snr_grid_npca=2,nfwhm=150,drsub=2,meansubmeanadd.fitssnrmap.fits'
+
+    #rotate images so N is up
+    loc = np.isnan(img)
+    loc += np.isinf(img) #apparently this works?
+    #loc = np.where((loc1 == True) or (loc2 == True))
+    img[loc] = 0
+    img = scipy.ndimage.interpolation.rotate(img, 234.78, reshape=False)
+    img[loc] = np.nan
     
     plt.imshow(img, interpolation='none', vmin=mymin, vmax=mymax)#, norm=LogNorm())
+
     plt.title(title, fontsize=21*fc, y=1.008)
     plt.xlim(crop)
     plt.ylim(crop)
@@ -170,12 +176,13 @@ def pic(band='none', save='show', image='data', save_band=False, disk='blah', pa
     #plt.colorbar()
     if image=='snr': plt.colorbar().ax.tick_params(labelsize=18) #shrink=0.8)
 
-    scalebar(annotate + [20, 5], distance=62, pixelscale=pixscal, linewidth=3*fc, fontsize=21*fc)
-    compass(annotate, angle=tot_rot, ax=None, length=8, textscale=1.6, fontsize=21*fc, \
+    scalebar(annotate + [25, 7], distance=66, pixelscale=pixscal, linewidth=3*fc, fontsize=24*fc)
+    compass(annotate, angle=0, ax=None, length=12, textscale=1.6, fontsize=24*fc, \
             color='white', labeleast=True, linewidth=3*fc)
 
-    plt.text(0.01, 0.985, panel, color='black',
-             ha='left', va='top',size=18, transform=ax.transAxes)
+    #label panel
+    #plt.text(0.01, 0.985, panel, color='black',
+    #         ha='left', va='top',size=18, transform=ax.transAxes)
     
     if save=='singlesave':
         ax.set_autoscale_on(False)

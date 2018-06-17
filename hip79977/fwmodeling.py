@@ -50,7 +50,7 @@ def syndisk(save=False):
     
     compass([30,130], angle=tot_rot, ax=None, length=8, textscale=2, fontsize=14, \
             color='white', labeleast=True, linewidth=2)
-    scalebar([70, 140], distance=62, pixelscale=pixscal, linewidth=2, fontsize=14)
+    scalebar([70, 140], distance=66, pixelscale=pixscal, linewidth=2, fontsize=14)
 
     plt.text(5, 155, '(a)', color='black', bbox=dict(facecolor='white'),
              ha='left', va='top',size=10)
@@ -82,7 +82,7 @@ def psfsub_syndisk(save=False):
     ax.set_yticklabels([])
     ax.set_xticklabels([])
 
-    compass([80,110], angle=tot_rot, ax=None, length=6, textscale=1.6, fontsize=18, \
+    compass([75,110], angle=tot_rot, ax=None, length=6, textscale=1.6, fontsize=18, \
             color='white', labeleast=True, linewidth=3)
 
     plt.text(plt.xlim()[0]+2.5, plt.ylim()[1]-2.5,
@@ -97,18 +97,15 @@ def psfsub_syndisk(save=False):
         print "Wrote", outtitle
     else:
         plt.show()
-
         
     
-def difference(save=False):
+def realdisk(save=False):
     realdisk = pyfits.getdata(dir+realdisk_fn)
-    syndisk_psfsub = pyfits.getdata(dir+syndisk_psfsub_fn)
     
     plt.figure(figsize=(7.5, 4), dpi=100)
-    plt.imshow(realdisk - syndisk_psfsub, \
-               interpolation='none', vmin=-1, vmax=6)#, norm=LogNorm())
+    plt.imshow(realdisk, interpolation='none', vmin=-1, vmax=6)#, norm=LogNorm())
     plt.colorbar()
-    plt.title("Real Disk - PSF-Subtracted Synthetic Disk")
+    plt.title("Actual Disk Data")
     plt.xlim(54, 146)
     plt.ylim(72, 128)
     ax = plt.gca()
@@ -117,12 +114,47 @@ def difference(save=False):
     ax.set_yticklabels([])
     ax.set_xticklabels([])
 
-    compass([80,110], angle=tot_rot, ax=None, length=6, textscale=1.6, fontsize=18, \
+    compass([75,110], angle=tot_rot, ax=None, length=6, textscale=1.6, fontsize=18, \
             color='white', labeleast=True, linewidth=3)
     
 
     plt.text(plt.xlim()[0]+2.5, plt.ylim()[1]-2.5,
              '(c)', color='black', bbox=dict(facecolor='white'),
+             ha='left', va='top', size=14)
+
+    outtitle='figs/realdisk.png'
+    
+    if save:
+        plt.savefig(outtitle, dpi=150)#, bbox_inches='tight')
+        plt.clf()
+        print "Wrote", outtitle
+    else:
+        plt.show()
+
+        
+def difference(save=False):
+    realdisk = pyfits.getdata(dir+realdisk_fn)
+    syndisk_psfsub = pyfits.getdata(dir+syndisk_psfsub_fn)
+    
+    plt.figure(figsize=(7.5, 4), dpi=100)
+    plt.imshow(realdisk - syndisk_psfsub, \
+               interpolation='none', vmin=-1, vmax=6)#, norm=LogNorm())
+    plt.colorbar()
+    plt.title("(Actual Disk) - (PSF-Subtracted Synthetic Disk)")
+    plt.xlim(54, 146)
+    plt.ylim(72, 128)
+    ax = plt.gca()
+    ax.set_autoscale_on(False)
+    plt.tight_layout()
+    ax.set_yticklabels([])
+    ax.set_xticklabels([])
+
+    compass([75,110], angle=tot_rot, ax=None, length=6, textscale=1.6, fontsize=18, \
+            color='white', labeleast=True, linewidth=3)
+    
+
+    plt.text(plt.xlim()[0]+2.5, plt.ylim()[1]-2.5,
+             '(d)', color='black', bbox=dict(facecolor='white'),
              ha='left', va='top', size=14)
 
     outtitle='figs/realdisk-syndisk.png'
@@ -135,12 +167,10 @@ def difference(save=False):
         plt.show()
 
 
-        
 def doall():
     syndisk(save=True)
-    
     psfsub_syndisk(save=True)
-    
+    realdisk(save=True)
     difference(save=True)
 
     
@@ -148,9 +178,10 @@ def doall():
 def combine():
     images = map(Image.open, ['figs/syndisk.png',
                               'figs/syndisk_psfsub.png',
+                              'figs/realdisk.png',
                               'figs/realdisk-syndisk.png'])
     
-    new_im = Image.new('RGB', (1125, 1800), color='white')
+    new_im = Image.new('RGB', (1125, 2400), color='white')
 
     sf = 0.075 #percent to crop from each edge
     images[0] = images[0].crop(np.round((np.shape(images[0])[1]*sf,
@@ -169,6 +200,7 @@ def combine():
     new_im.paste(images[0], (10,0))
     new_im.paste(images[1], (0,600))
     new_im.paste(images[2], (0,1200))
+    new_im.paste(images[3], (0,1800))
 
     #label the panes
     #font = ImageFont.truetype('Pillow/Tests/fonts/FreeMono.ttf', 40)
