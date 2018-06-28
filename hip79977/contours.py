@@ -16,9 +16,9 @@ def main(save=True):
 
     #set variables to plot against each other
     vars = ['R0', 'ALP_I', 'ALP_O', 'G', 'KSI0', 'BETA']
-    dir = '20180503/'
+    dir = '20180627/'
 
-    data = np.loadtxt(dir+'grid_search_stats_20180503.txt', dtype='str')
+    data = np.loadtxt(dir+'grid_search_stats.txt', dtype='str')
 
     for i in range(len(vars)):
         col = np.squeeze(np.where(data[0,:] == vars[i])) #eg 9
@@ -63,8 +63,16 @@ def main(save=True):
             elif yparam == 'G': tit2 = r'$g$'
                     
             plt.imshow(im, interpolation='none')
-            plt.xticks(range(len(params[i])) , params[i])
-            plt.yticks(range(len(params[j])) , params[j])
+            if xparam == 'R0':
+                plt.xticks(range(len(params[i])) , np.round(params[i]*1.069).astype(int))
+                plt.yticks(range(len(params[j])) , params[j])
+            elif yparam == 'R0':
+                plt.xticks(range(len(params[i])) , params[i])
+                plt.yticks(range(len(params[j])) , np.round(params[j]*1.069).astype(int))
+            else:
+                plt.xticks(range(len(params[i])) , params[i])
+                plt.yticks(range(len(params[j])) , params[j])
+                
             plt.title(tit1+' vs. '+tit2+" mean " + r'$\chi_{\nu}^{2}$', fontsize=21)
             plt.tight_layout()
             plt.subplots_adjust(bottom=0.1, top=0.93) #make space for title

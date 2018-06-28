@@ -10,9 +10,9 @@ def main(save=False):
 
     #set variables to plot against each other
     vars = ['R0', 'ALP_I', 'ALP_O', 'G', 'KSI0', 'BETA']
-    dir = '20180503/'
-    data = np.loadtxt(dir+'grid_search_stats_20180503.txt', dtype='str')
-    chisq_accept = 1.047 #threshold for acceptable fit
+    dir = '20180627/'
+    data = np.loadtxt(dir+'grid_search_stats.txt', dtype='str')
+    chisq_accept = 0.8833 #threshold for acceptable fit
     
     for i in range(len(vars)):
         col = np.squeeze(np.where(data[0,:] == vars[i])) #eg 9
@@ -52,9 +52,9 @@ def main(save=False):
         plt.bar(range(len(tabulation[:,0])), tabulation[:,1] / tabulation[:,2],
                 align='center', width=0.1*len(params[i]))#, color='black')
         if xparam=='R0':
-            params[i] = params[i].astype('string')
-            for j in range(len(params[i])):
-                params[i][j] = params[i][j][:2]
+            params[i] = np.round(params[i]*1.069).astype(int).astype(str)
+            #for j in range(len(params[i])):
+            #    params[i][j] = params[i][j][:2]
         plt.xticks(range(len(params[i])) , params[i], fontsize=14)
         plt.yticks(fontsize=14)
         #label=tabulation[:,0])
@@ -68,7 +68,7 @@ def main(save=False):
 
     plt.suptitle('Fraction of values that produced '+
                  r'$\chi_{\nu}^{2} \leq$'+str(chisq_accept)[:6], fontsize=21)
-    plt.subplots_adjust(left=0.12, bottom=0.08, right=0.99, top=0.92, hspace=0.31)
+    plt.subplots_adjust(left=0.14, bottom=0.08, right=0.99, top=0.92, hspace=0.31, wspace=0.28)
     if save==True:
         plt.savefig('figs/histograms.png', dpi=150)
         plt.close()

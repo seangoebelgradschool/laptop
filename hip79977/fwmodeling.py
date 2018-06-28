@@ -6,12 +6,16 @@ from matplotlib.colors import LogNorm
 #import sys
 from PIL import Image, ImageDraw, ImageFont
 
-dir = 'figs/'
-realdisk_fn = 'ugly/settled2_npca=2,drsub=6,nfwhm=1,rmin=5,rmax=50,meansub,meanadd_collapsed.fits'
+dir = '20180627/'
+#'figs/'
 
-syndisk_fn = 'egrater_0.600000,1.00000,4,-3.50000,112.400,0,0,112.400,84.6000,70,2,0.fits'
+realdisk_fn = 'settled2_npca=2,drsub=6,nfwhm=1,rmin=5,rmax=50,meansub,meanadd_collapsed.fits'
 
-syndisk_psfsub_fn = 'egrater_0.600000,1.00000,4,-3.50000,112.400,0,0,112.400,84.6000,70,2,0_psfsubcol.fits'
+syndisk_fn ='egrater_0.650000,3.00000,5,-2.00000,112.400,0,0,112.400,84.6000,60,1,0.fits'
+#'egrater_0.600000,1.00000,4,-3.50000,112.400,0,0,112.400,84.6000,70,2,0.fits'
+
+syndisk_psfsub_fn = 'egrater_0.650000,3.00000,5,-2.00000,112.400,0,0,112.400,84.6000,60,1,0_psfsubcol.fits'
+#'egrater_0.600000,1.00000,4,-3.50000,112.400,0,0,112.400,84.6000,70,2,0_psfsubcol.fits'
 
 tot_rot = 0#-125.22#112.4
 
